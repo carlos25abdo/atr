@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أثر - عرض تقديمي</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;400;600;700;900&family=Tajawal:wght@300;400;500;700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --red: #C41E2A;
+            --red-dark: #9B1B24;
+            --red-light: #E8384F;
+            --black: #0D0D0D;
+            --black-soft: #1A1A1A;
+            --gray-dark: #2A2A2A;
+            --gray-mid: #6B6B6B;
+            --gray-light: #B0B0B0;
+            --white: #FFFFFF;
+            --off-white: #F5F2EF;
+            --card-bg: rgba(255, 255, 255, 0.04);
+            --border: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', 'Tajawal', sans-serif;
+            background: var(--black);
+            color: var(--white);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* === شريط التقدم العلوي === */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--red), var(--red-light));
+            z-index: 1000;
+            transition: width 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+            box-shadow: 0 0 20px rgba(196, 30, 42, 0.5);
+        }
+
+        /* === عداد الشرائح === */
+        .slide-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 40px;
+            font-size: 14px;
+            font-weight: 300;
+            color: var(--gray-light);
+            z-index: 1000;
+            letter-spacing: 2px;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .slide-counter .current {
+            color: var(--red);
+            font-weight: 700;
+            font-size: 22px;
+        }
+
+        /* === أزرار التنقل === */
+        .nav-controls {
+            position: fixed;
+            bottom: 30px;
+            right: 40px;
+            display: flex;
+            gap: 12px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            color: var(--white);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: var(--red);
+            border-color: var(--red);
+            transform: scale(1.1);
+            box-shadow: 0 0 25px rgba(196, 30, 42, 0.4);
+        }
+
+        .nav-btn:active {
+            transform: scale(0.95);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.2;
+            cursor: not-allowed;
+            transform: none;
+            background: var(--card-bg);
+            border-color: var(--border);
+            box-shadow: none;
+        }
+
+        /* === مؤشرات الشرائح === */
+        .slide-dots {
+            position: fixed;
+            left: 50%;
+            bottom: 38px;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 1000;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--gray-dark);
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+
+        .dot.active {
+            background: var(--red);
+            width: 32px;
+            border-radius: 4px;
+            box-shadow: 0 0 12px rgba(196, 30, 42, 0.5);
+        }
+
+        .dot:hover:not(.active) {
+            background: var(--gray-mid);
+        }
+
+        /* === حاوية الشرائح === */
+        .slides-container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.7s cubic-bezier(0.65, 0, 0.35, 1);
+            padding: 60px 80px;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .slide.prev {
+            transform: translateX(60px);
+            opacity: 0;
+        }
+
+        .slide.next {
+            transform: translateX(-60px);
+            opacity: 0;
+        }
+
+        .slide-inner {
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        /* === خلفيات الشرائح === */
+        .slide-bg-pattern {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        /* === الشريحة 1: الغلاف === */
+        .slide-cover {
+            text-align: center;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .slide-cover .slide-bg-pattern::before {
+            content: '';
+            position: absolute;
+            top: -200px;
+            left: -200px;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(196, 30, 42, 0.12) 0%, transparent 70%);
+            animation: pulse-glow 4s ease-in-out infinite;
+        }
+
+        .slide-cover .slide-bg-pattern::after {
+            content: '';
+            position: absolute;
+            bottom: -150px;
+            right: -150px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(196, 30, 42, 0.08) 0%, transparent 70%);
+            animation: pulse-glow 5s ease-in-out infinite 1s;
+        }
+
+        @keyframes pulse-glow {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.6;
+            }
+
+            50% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+        }
+
+        .cover-logo {
+            font-size: clamp(100px, 15vw, 200px);
+            font-weight: 900;
+            color: var(--red);
+            line-height: 1;
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+            text-shadow: 0 0 80px rgba(196, 30, 42, 0.3);
+            animation: logo-reveal 1s ease-out 0.3s both;
+        }
+
+        .cover-logo::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            right: 10%;
+            width: 80%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--red), transparent);
+            animation: line-expand 1s ease-out 0.8s both;
+        }
+
+        @keyframes logo-reveal {
+            from {
+                opacity: 0;
+                transform: scale(0.8) translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        @keyframes line-expand {
+            from {
+                width: 0;
+                opacity: 0;
+            }
+
+            to {
+                width: 80%;
+                opacity: 1;
+            }
+        }
+
+        .cover-tagline {
+            font-size: clamp(18px, 2.5vw, 28px);
+            font-weight: 300;
+            color: var(--gray-light);
+            margin-top: 30px;
+            animation: fade-up 0.8s ease-out 1s both;
+            letter-spacing: 1px;
+        }
+
+        .cover-subtitle {
+            font-size: clamp(13px, 1.5vw, 16px);
+            color: var(--gray-mid);
+            margin-top: 16px;
+            animation: fade-up 0.8s ease-out 1.2s both;
+        }
+
+        @keyframes fade-up {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .cover-grid {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.03;
+            background-image:
+                linear-gradient(var(--white) 1px, transparent 1px),
+                linear-gradient(90deg, var(--white) 1px, transparent 1px);
+            background-size: 80px 80px;
+        }
+
+        /* === الشريحة 2: المشكلة === */
+        .problem-icon {
+            font-size: 48px;
+            color: var(--red);
+            margin-bottom: 24px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .problem-label {
+            display: inline-block;
+            padding: 6px 20px;
+            border: 1px solid var(--red);
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--red);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+        }
+
+        .problem-heading {
+            font-size: clamp(28px, 4vw, 52px);
+            font-weight: 900;
+            line-height: 1.4;
+            margin-bottom: 30px;
+        }
+
+        .problem-heading .highlight {
+            color: var(--red);
+            position: relative;
+        }
+
+        .problem-heading .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            right: 0;
+            width: 100%;
+            height: 8px;
+            background: rgba(196, 30, 42, 0.2);
+            border-radius: 4px;
+        }
+
+        .problem-sub {
+            font-size: clamp(18px, 2vw, 24px);
+            color: var(--gray-light);
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        .problem-stats {
+            display: flex;
+            gap: 40px;
+            margin-top: 50px;
+            padding-top: 40px;
+            border-top: 1px solid var(--border);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: 900;
+            color: var(--red);
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--gray-mid);
+            margin-top: 4px;
+        }
+
+        /* === الشريحة 3: الحل === */
+        .solution-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 24px;
+            background: var(--red);
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 30px;
+        }
+
+        .solution-heading {
+            font-size: clamp(26px, 3.5vw, 46px);
+            font-weight: 900;
+            line-height: 1.4;
+            margin-bottom: 20px;
+        }
+
+        .solution-desc {
+            font-size: clamp(16px, 1.8vw, 20px);
+            color: var(--gray-light);
+            line-height: 1.8;
+            max-width: 700px;
+            margin-bottom: 50px;
+        }
+
+        .solution-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px 24px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 4px;
+            height: 0;
+            background: var(--red);
+            transition: height 0.4s ease;
+            border-radius: 0 0 4px 0;
+        }
+
+        .feature-card:hover {
+            background: rgba(196, 30, 42, 0.06);
+            border-color: rgba(196, 30, 42, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .feature-card:hover::before {
+            height: 100%;
+        }
+
+        .feature-icon {
+            font-size: 28px;
+            color: var(--red);
+            margin-bottom: 14px;
+        }
+
+        .feature-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .feature-text {
+            font-size: 13px;
+            color: var(--gray-mid);
+            line-height: 1.6;
+        }
+
+        /* === الشريحة 4: الأهداف === */
+        .objectives-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 16px;
+            max-height: 70vh;
+            overflow-y: auto;
+            padding-left: 10px;
+        }
+
+        .objectives-grid::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .objectives-grid::-webkit-scrollbar-thumb {
+            background: var(--red);
+            border-radius: 4px;
+        }
+
+        .objective-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateX(30px);
+        }
+
+        .objective-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .objective-item:hover {
+            background: rgba(196, 30, 42, 0.05);
+            border-color: rgba(196, 30, 42, 0.2);
+        }
+
+        .objective-num {
+            flex-shrink: 0;
+            width: 36px;
+            height: 36px;
+            background: var(--red);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 900;
+            color: var(--white);
+        }
+
+        .objective-text {
+            font-size: 15px;
+            line-height: 1.7;
+            color: var(--gray-light);
+            padding-top: 6px;
+        }
+
+        /* === الشريحة 5: نقاط القوة والضعف === */
+        .swot-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            width: 100%;
+        }
+
+        .swot-col {
+            border-radius: 20px;
+            padding: 36px 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .swot-col::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.03;
+            pointer-events: none;
+        }
+
+        .swot-strengths {
+            background: linear-gradient(135deg, rgba(196, 30, 42, 0.08), rgba(196, 30, 42, 0.02));
+            border: 1px solid rgba(196, 30, 42, 0.2);
+        }
+
+        .swot-weaknesses {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+            border: 1px solid var(--border);
+        }
+
+        .swot-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 28px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .swot-header-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .swot-strengths .swot-header-icon {
+            background: var(--red);
+            color: var(--white);
+        }
+
+        .swot-weaknesses .swot-header-icon {
+            background: var(--gray-dark);
+            color: var(--gray-light);
+        }
+
+        .swot-header-text {
+            font-size: 22px;
+            font-weight: 900;
+        }
+
+        .swot-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .swot-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--gray-light);
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        .swot-list li.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.4s ease;
+        }
+
+        .swot-list li .li-icon {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            margin-top: 2px;
+        }
+
+        .swot-strengths .li-icon {
+            background: rgba(196, 30, 42, 0.15);
+            color: var(--red);
+        }
+
+        .swot-weaknesses .li-icon {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--gray-mid);
+        }
+
+        /* === عنوان مشترك === */
+        .section-label {
+            display: inline-block;
+            padding: 6px 20px;
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray-mid);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+
+        .section-heading {
+            font-size: clamp(28px, 3.5vw, 44px);
+            font-weight: 900;
+            line-height: 1.3;
+            margin-bottom: 16px;
+        }
+
+        .section-heading .red {
+            color: var(--red);
+        }
+
+        /* === خلفية متحركة === */
+        .bg-particles {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--red);
+            border-radius: 50%;
+            opacity: 0;
+            animation: particle-float linear infinite;
+        }
+
+        @keyframes particle-float {
+            0% {
+                opacity: 0;
+                transform: translateY(100vh) scale(0);
+            }
+
+            10% {
+                opacity: 0.6;
+            }
+
+            90% {
+                opacity: 0.6;
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(-10vh) scale(1);
+            }
+        }
+
+        /* === خطوط زخرفية === */
+        .deco-line {
+            position: absolute;
+            background: linear-gradient(to bottom, transparent, var(--red), transparent);
+            width: 1px;
+            height: 200px;
+            opacity: 0.1;
+            animation: deco-drift 8s ease-in-out infinite;
+        }
+
+        @keyframes deco-drift {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-30px);
+            }
+        }
+
+        /* === تأثير الكتابة === */
+        .typewriter {
+            overflow: hidden;
+            white-space: nowrap;
+            border-left: 3px solid var(--red);
+            animation: typing 2s steps(30) forwards, blink-caret 0.75s step-end infinite;
+            width: 0;
+            display: inline-block;
+        }
+
+        @keyframes typing {
+            from {
+                width: 0;
+            }
+
+            to {
+                width: 100%;
+            }
+        }
+
+        @keyframes blink-caret {
+
+            from,
+            to {
+                border-color: transparent;
+            }
+
+            50% {
+                border-color: var(--red);
+            }
+        }
+
+        /* === تجاوب === */
+        @media (max-width: 768px) {
+            .slide {
+                padding: 40px 24px;
+            }
+
+            .swot-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .objectives-grid {
+                grid-template-columns: 1fr;
+                max-height: 55vh;
+            }
+
+            .problem-stats {
+                gap: 20px;
+                flex-wrap: wrap;
+            }
+
+            .solution-features {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-controls {
+                right: 20px;
+                bottom: 20px;
+            }
+
+            .slide-counter {
+                left: 20px;
+                bottom: 20px;
+            }
+
+            .slide-dots {
+                display: none;
+            }
+        }
+
+        /* === تقليل الحركة === */
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* === شريحة ختامية === */
+        .end-slide {
+            text-align: center;
+            flex-direction: column;
+        }
+
+        .end-logo {
+            font-size: clamp(60px, 10vw, 120px);
+            font-weight: 900;
+            color: var(--red);
+            line-height: 1;
+            margin-bottom: 30px;
+            text-shadow: 0 0 60px rgba(196, 30, 42, 0.3);
+        }
+
+        .end-tagline {
+            font-size: clamp(20px, 3vw, 32px);
+            font-weight: 300;
+            color: var(--gray-light);
+            margin-bottom: 16px;
+        }
+
+        .end-desc {
+            font-size: 15px;
+            color: var(--gray-mid);
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        .end-cta {
+            margin-top: 40px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 40px;
+            background: var(--red);
+            color: var(--white);
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: 'Cairo', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .end-cta:hover {
+            background: var(--red-dark);
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(196, 30, 42, 0.4);
+        }
+
+        /* === تأثير ظهور العناصر === */
+        .reveal {
+            opacity: 0;
+            transform: translateY(25px);
+            transition: all 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* === الخلفية الشبكية === */
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.02;
+            background-image:
+                linear-gradient(var(--white) 1px, transparent 1px),
+                linear-gradient(90deg, var(--white) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+
+        /* === توهج أحمر === */
+        .red-glow {
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(196, 30, 42, 0.08), transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+            transition: all 1.5s ease;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- خلفية شبكية -->
+    <div class="grid-bg"></div>
+
+    <!-- توهج يتبع الماوس -->
+    <div class="red-glow" id="redGlow"></div>
+
+    <!-- جسيمات -->
+    <div class="bg-particles" id="particles"></div>
+
+    <!-- شريط التقدم -->
+    <div class="progress-bar" id="progressBar" style="width: 20%"></div>
+
+    <!-- عداد الشرائح -->
+    <div class="slide-counter">
+        <span class="current" id="currentNum">01</span>
+        <span>/ </span>
+        <span id="totalNum">06</span>
+    </div>
+
+    <!-- نقاط التنقل -->
+    <div class="slide-dots" id="dotsContainer"></div>
+
+    <!-- أزرار التنقل -->
+    <div class="nav-controls">
+        <button class="nav-btn" id="prevBtn" aria-label="الشريحة السابقة">
+            <i class="fas fa-arrow-right"></i>
+        </button>
+        <button class="nav-btn" id="nextBtn" aria-label="الشريحة التالية">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+    </div>
+
+    <!-- === حاوية الشرائح === -->
+    <div class="slides-container" id="slidesContainer">
+
+        <!-- الشريحة 1: الغلاف -->
+        <div class="slide slide-cover active" data-index="0">
+            <div class="cover-grid"></div>
+            <div class="slide-bg-pattern"></div>
+            <div class="slide-inner"
+                style="text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                <div class="cover-logo">أثر</div>
+                <div class="cover-tagline">كل الصيدليات في مكان واحد</div>
+                <div class="cover-subtitle">منصة ذكية للبحث عن الأدوية وتوفرها في صيدليات مدينتك</div>
+            </div>
+        </div>
+
+        <!-- الشريحة 2: المشكلة -->
+        <div class="slide" data-index="1">
+            <div class="slide-bg-pattern">
+                <div class="deco-line" style="top:10%; left:15%;"></div>
+                <div class="deco-line" style="bottom:15%; right:10%; animation-delay:2s;"></div>
+            </div>
+            <div class="slide-inner">
+                <div class="problem-label reveal">المشكلة</div>
+                <div class="problem-heading reveal" style="transition-delay:0.1s">
+                    ماذا لو احتجت دواء بشكل <span class="highlight">عاجل</span>،<br>
+                    ولم تعرف أين تجده؟
+                </div>
+                <div class="problem-sub reveal" style="transition-delay:0.2s">
+                    كم من الوقت ستخسر في البحث عنه؟
+                </div>
+                <div class="problem-stats reveal" style="transition-delay:0.35s">
+                    <div class="stat-item">
+                        <div class="stat-number" data-count="3">0</div>
+                        <div class="stat-label">صيدليات في المتوسط يزورها المريض</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" data-count="45">0</div>
+                        <div class="stat-label">دقيقة ضائعة في كل مرة</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" data-count="67">0</div>
+                        <div class="stat-label">% من المرضى يعانون من هذه المشكلة</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- الشريحة 3: الحل -->
+        <div class="slide" data-index="2">
+            <div class="slide-bg-pattern"></div>
+            <div class="slide-inner">
+                <div class="solution-badge reveal">
+                    <i class="fas fa-lightbulb"></i>
+                    الحل المقترح
+                </div>
+                <div class="solution-heading reveal" style="transition-delay:0.1s">
+                    تطبيق <span style="color:var(--red)">أثر</span> يوفر عليك الوقت والجهد
+                </div>
+                <div class="solution-desc reveal" style="transition-delay:0.2s">
+                    منصة تجمع كل الصيدليات في مكان واحد، مع رصد فوري لتوفر الأدوية وتوجيهك مباشرة إلى أقرب صيدلية تتوفر
+                    فيها ما تحتاجه.
+                </div>
+                <div class="solution-features">
+                    <div class="feature-card reveal" style="transition-delay:0.25s">
+                        <div class="feature-icon"><i class="fas fa-search-location"></i></div>
+                        <div class="feature-title">بحث ذكي</div>
+                        <div class="feature-text">ابحث بالاسم أو بالصورة عن أي دواء وتعرّف على مواقع توفره فوراً</div>
+                    </div>
+                    <div class="feature-card reveal" style="transition-delay:0.35s">
+                        <div class="feature-icon"><i class="fas fa-map-marked-alt"></i></div>
+                        <div class="feature-title">توجيه مباشر</div>
+                        <div class="feature-text">احصل على اتجاهات دقيقة إلى أقرب صيدلية تتوفر لديها الدواء المطلوب
+                        </div>
+                    </div>
+                    <div class="feature-card reveal" style="transition-delay:0.45s">
+                        <div class="feature-icon"><i class="fas fa-database"></i></div>
+                        <div class="feature-title">قاعدة بيانات حية</div>
+                        <div class="feature-text">رصد مستمر لتوفر الأدوية وتحديث البيانات بشكل آلي وموثوق</div>
+                    </div>
+                    <div class="feature-card reveal" style="transition-delay:0.55s">
+                        <div class="feature-icon"><i class="fas fa-truck"></i></div>
+                        <div class="feature-title">خدمة توصيل</div>
+                        <div class="feature-text">إمكانية التكامل مع خدمات التوصيل لتوصيل الدواء إلى باب منزلك</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- الشريحة 4: الأهداف -->
+        <div class="slide" data-index="3">
+            <div class="slide-bg-pattern"></div>
+            <div class="slide-inner">
+                <div class="section-label reveal">الرؤية</div>
+                <div class="section-heading reveal" style="transition-delay:0.1s">
+                    أهداف <span class="red">المشروع</span>
+                </div>
+                <div class="objectives-grid" style="margin-top: 30px;">
+                    <div class="objective-item" data-delay="0">
+                        <div class="objective-num">1</div>
+                        <div class="objective-text">تقليل الوقت والجهد اللازمين للبحث عن الدواء</div>
+                    </div>
+                    <div class="objective-item" data-delay="1">
+                        <div class="objective-num">2</div>
+                        <div class="objective-text">ربط 10 صيدليات رئيسية وفروعها بالمنصة في المرحلة الأولى</div>
+                    </div>
+                    <div class="objective-item" data-delay="2">
+                        <div class="objective-num">3</div>
+                        <div class="objective-text">إنشاء قاعدة بيانات تساعد على رصد توفر الأدوية والتغيرات في توفرها
+                        </div>
+                    </div>
+                    <div class="objective-item" data-delay="3">
+                        <div class="objective-num">4</div>
+                        <div class="objective-text">تسهيل الوصول إلى أدوية الأمراض النادرة</div>
+                    </div>
+                    <div class="objective-item" data-delay="4">
+                        <div class="objective-num">5</div>
+                        <div class="objective-text">توجيه المستخدم إلى الصيدلية المناسبة وفق توفر الدواء وموقعها</div>
+                    </div>
+                    <div class="objective-item" data-delay="5">
+                        <div class="objective-num">6</div>
+                        <div class="objective-text">تطوير آلية موثوقة لتحديث بيانات توفر الأدوية</div>
+                    </div>
+                    <div class="objective-item" data-delay="6">
+                        <div class="objective-num">7</div>
+                        <div class="objective-text">توفير إمكانية التكامل مع خدمات التوصيل</div>
+                    </div>
+                    <div class="objective-item" data-delay="7">
+                        <div class="objective-num">8</div>
+                        <div class="objective-text">تصميم المنصة بحيث تسمح بالتوسع مستقبلاً داخل مصراتة ثم إلى مدن ليبية
+                            أخرى</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- الشريحة 5: نقاط القوة والضعف -->
+        <div class="slide" data-index="4">
+            <div class="slide-bg-pattern"></div>
+            <div class="slide-inner">
+                <div class="section-label reveal">التحليل</div>
+                <div class="section-heading reveal" style="transition-delay:0.1s; margin-bottom: 36px;">
+                    نقاط <span class="red">القوة</span> والضعف
+                </div>
+                <div class="swot-container">
+                    <div class="swot-col swot-strengths">
+                        <div class="swot-header">
+                            <div class="swot-header-icon"><i class="fas fa-shield-alt"></i></div>
+                            <div class="swot-header-text">نقاط القوة</div>
+                        </div>
+                        <ul class="swot-list">
+                            <li data-delay="0"><span class="li-icon"><i class="fas fa-check"></i></span>يعالج مشكلة
+                                واضحة وواقعية يواجهها المرضى يومياً</li>
+                            <li data-delay="1"><span class="li-icon"><i class="fas fa-check"></i></span>يتيح البحث
+                                بالاسم والصورة لتسهيل الوصول للدواء</li>
+                            <li data-delay="2"><span class="li-icon"><i class="fas fa-check"></i></span>يمكن دمج الموقع
+                                مع خدمة التوصيل لقيمة مضافة</li>
+                            <li data-delay="3"><span class="li-icon"><i class="fas fa-check"></i></span>قابل للتوسع
+                                مستقبلاً إلى مدن ومناطق جديدة</li>
+                        </ul>
+                    </div>
+                    <div class="swot-col swot-weaknesses">
+                        <div class="swot-header">
+                            <div class="swot-header-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                            <div class="swot-header-text">نقاط الضعف</div>
+                        </div>
+                        <ul class="swot-list">
+                            <li data-delay="0"><span class="li-icon"><i class="fas fa-times"></i></span>الاعتماد على
+                                تحديث بيانات توفر الأدوية بشكل مستمر</li>
+                            <li data-delay="1"><span class="li-icon"><i class="fas fa-times"></i></span>الحاجة إلى تعاون
+                                الصيدليات وإشراكها في المنصة</li>
+                            <li data-delay="2"><span class="li-icon"><i class="fas fa-times"></i></span>محدودية التغطية
+                                الجغرافية في المرحلة الأولى</li>
+                            <li data-delay="3"><span class="li-icon"><i class="fas fa-times"></i></span>الحاجة إلى بناء
+                                ثقة المستخدم في دقة المعلومات</li>
+                            <li data-delay="4"><span class="li-icon"><i class="fas fa-times"></i></span>الحاجة إلى موارد
+                                مالية وتشغيلية مستمرة</li>
+                            <li data-delay="5"><span class="li-icon"><i class="fas fa-times"></i></span>الحاجة إلى تطوير
+                                تقني مخصص للمنصة</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- الشريحة 6: الختام -->
+        <div class="slide end-slide" data-index="5">
+            <div class="slide-bg-pattern">
+                <div
+                    style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:500px; height:500px; border-radius:50%; background:radial-gradient(circle, rgba(196,30,42,0.1), transparent 70%); animation: pulse-glow 4s ease-in-out infinite;">
+                </div>
+            </div>
+            <div class="slide-inner"
+                style="text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                <div class="end-logo reveal">أثر</div>
+                <div class="end-tagline reveal" style="transition-delay:0.15s">صحتك لا تنتظر</div>
+                <div class="end-desc reveal" style="transition-delay:0.3s">
+                    نجمع لك كل الصيدليات في مكان واحد، لتنفق وقتك في ما يهم فعلاً — صحتك وعائلتك.
+                </div>
+                <button class="end-cta reveal" style="transition-delay:0.45s" onclick="goToSlide(0)">
+                    <i class="fas fa-redo"></i>
+                    إعادة العرض
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // === إدارة الشرائح ===
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let currentIndex = 0;
+        let isAnimating = false;
+
+        const progressBar = document.getElementById('progressBar');
+        const currentNum = document.getElementById('currentNum');
+        const totalNum = document.getElementById('totalNum');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const dotsContainer = document.getElementById('dotsContainer');
+
+        // تعيين العدد الإجمالي
+        totalNum.textContent = String(totalSlides).padStart(2, '0');
+
+        // إنشاء النقاط
+        for (let i = 0; i < totalSlides; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'dot' + (i === 0 ? ' active' : '');
+            dot.addEventListener('click', () => goToSlide(i));
+            dotsContainer.appendChild(dot);
+        }
+        const dots = document.querySelectorAll('.dot');
+
+        // تحديث واجهة التنقل
+        function updateNav() {
+            const progress = ((currentIndex + 1) / totalSlides) * 100;
+            progressBar.style.width = progress + '%';
+            currentNum.textContent = String(currentIndex + 1).padStart(2, '0');
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex === totalSlides - 1;
+            dots.forEach((d, i) => d.classList.toggle('active', i === currentIndex));
+        }
+
+        // الانتقال إلى شريحة محددة
+        function goToSlide(index) {
+            if (isAnimating || index === currentIndex || index < 0 || index >= totalSlides) return;
+            isAnimating = true;
+
+            const direction = index > currentIndex ? 'next' : 'prev';
+            const oldSlide = slides[currentIndex];
+            const newSlide = slides[index];
+
+            // إزالة الحالات السابقة
+            oldSlide.classList.remove('active');
+            oldSlide.classList.add(direction === 'next' ? 'prev' : 'next');
+
+            // تحضير الشريحة الجديدة
+            newSlide.classList.remove('prev', 'next');
+            newSlide.style.transition = 'none';
+            newSlide.classList.add(direction === 'next' ? 'next' : 'prev');
+            newSlide.offsetHeight; // إجبار إعادة الرسم
+            newSlide.style.transition = '';
+            newSlide.classList.remove('prev', 'next');
+            newSlide.classList.add('active');
+
+            currentIndex = index;
+            updateNav();
+            animateSlideElements(newSlide);
+
+            setTimeout(() => {
+                oldSlide.classList.remove('prev', 'next');
+                isAnimating = false;
+            }, 700);
+        }
+
+        // التنقل بالأزرار
+        prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
+        nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
+
+        // التنقل بلوحة المفاتيح
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+                e.preventDefault();
+                goToSlide(currentIndex + 1);
+            } else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+                e.preventDefault();
+                goToSlide(currentIndex - 1);
+            }
+        });
+
+        // التنقل باللمس
+        let touchStartX = 0;
+        let touchStartY = 0;
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+        document.addEventListener('touchend', (e) => {
+            const dx = e.changedTouches[0].clientX - touchStartX;
+            const dy = e.changedTouches[0].clientY - touchStartY;
+            if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 60) {
+                // في RTL: السحب لليسار = التالي، السحب لليمين = السابق
+                if (dx < 0) goToSlide(currentIndex + 1);
+                else goToSlide(currentIndex - 1);
+            }
+        }, { passive: true });
+
+        // === تأثيرات ظهور العناصر ===
+        function animateSlideElements(slide) {
+            // العناصر العامة reveal
+            const reveals = slide.querySelectorAll('.reveal');
+            reveals.forEach((el, i) => {
+                el.classList.remove('visible');
+                const delay = parseFloat(el.style.transitionDelay) || (i * 0.1);
+                el.style.transitionDelay = delay + 's';
+                setTimeout(() => el.classList.add('visible'), 50);
+            });
+
+            // عناصر الأهداف
+            const objectives = slide.querySelectorAll('.objective-item');
+            objectives.forEach((item, i) => {
+                item.classList.remove('visible');
+                setTimeout(() => item.classList.add('visible'), 100 + i * 80);
+            });
+
+            // عناصر SWOT
+            const swotItems = slide.querySelectorAll('.swot-list li');
+            swotItems.forEach((item, i) => {
+                item.classList.remove('visible');
+                setTimeout(() => {
+                    item.style.transition = 'all 0.4s ease';
+                    item.classList.add('visible');
+                }, 200 + i * 100);
+            });
+
+            // عداد الأرقام
+            const counters = slide.querySelectorAll('[data-count]');
+            counters.forEach(counter => {
+                const target = parseInt(counter.dataset.count);
+                counter.textContent = '0';
+                animateCounter(counter, target);
+            });
+        }
+
+        // تأثير العد
+        function animateCounter(el, target) {
+            const duration = 1500;
+            const start = performance.now();
+            function update(now) {
+                const elapsed = now - start;
+                const progress = Math.min(elapsed / duration, 1);
+                // تسهيل خارجي
+                const eased = 1 - Math.pow(1 - progress, 3);
+                el.textContent = Math.round(eased * target);
+                if (progress < 1) requestAnimationFrame(update);
+                else el.textContent = target;
+            }
+            requestAnimationFrame(update);
+        }
+
+        // === الجسيمات الخلفية ===
+        const particlesContainer = document.getElementById('particles');
+        function createParticles() {
+            for (let i = 0; i < 25; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.width = (Math.random() * 3 + 1) + 'px';
+                p.style.height = p.style.width;
+                p.style.animationDuration = (Math.random() * 10 + 8) + 's';
+                p.style.animationDelay = (Math.random() * 10) + 's';
+                particlesContainer.appendChild(p);
+            }
+        }
+        createParticles();
+
+        // === توهج يتبع الماوس ===
+        const glow = document.getElementById('redGlow');
+        document.addEventListener('mousemove', (e) => {
+            glow.style.left = (e.clientX - 200) + 'px';
+            glow.style.top = (e.clientY - 200) + 'px';
+        });
+
+        // === تهيئة الشريحة الأولى ===
+        animateSlideElements(slides[0]);
+        updateNav();
+
+        // === دعم عجلة الماوس ===
+        let wheelTimeout = null;
+        document.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            if (wheelTimeout) return;
+            wheelTimeout = setTimeout(() => { wheelTimeout = null; }, 800);
+            if (e.deltaY > 0) goToSlide(currentIndex + 1);
+            else goToSlide(currentIndex - 1);
+        }, { passive: false });
+    </script>
+</body>
+
+</html>
