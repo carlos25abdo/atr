@@ -11,18 +11,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         :root {
-            --blue: #26C6DA;
-            --blue-dark: #00838F;
-            --blue-light: #80DEEA;
-            --black: #020611;
-            --black-soft: #0A1325;
-            --gray-dark: #2A2A2A;
-            --gray-mid: #6B6B6B;
-            --gray-light: #B0B0B0;
-            --white: #FFFFFF;
-            --off-white: #F5F2EF;
-            --card-bg: rgba(255, 255, 255, 0.04);
-            --border: rgba(255, 255, 255, 0.08);
+            --blue: #0097A7;
+            --blue-dark: #006064;
+            --blue-light: #4DD0E1;
+            --black: #F7FAFC;
+            --black-soft: #FFFFFF;
+            --gray-dark: #E2E8F0;
+            --gray-mid: #718096;
+            --gray-light: #4A5568;
+            --white: #2D3748;
+            --off-white: #EDF2F7;
+            --card-bg: #FFFFFF;
+            --border: rgba(0, 0, 0, 0.08);
+            --pure-white: #FFFFFF;
         }
 
         * {
@@ -102,6 +103,7 @@
         .nav-btn:hover {
             background: var(--blue);
             border-color: var(--blue);
+            color: var(--pure-white);
             transform: scale(1.1);
             box-shadow: 0 0 25px rgba(38, 198, 218, 0.4);
         }
@@ -432,7 +434,7 @@
             border-radius: 30px;
             font-size: 14px;
             font-weight: 700;
-            color: var(--white);
+            color: var(--pure-white);
             margin-bottom: 30px;
         }
 
@@ -560,7 +562,7 @@
             justify-content: center;
             font-size: 14px;
             font-weight: 900;
-            color: var(--white);
+            color: var(--pure-white);
         }
 
         .objective-text {
@@ -627,7 +629,7 @@
 
         .swot-strengths .swot-header-icon {
             background: var(--blue);
-            color: var(--white);
+            color: var(--pure-white);
         }
 
         .swot-weaknesses .swot-header-icon {
@@ -894,7 +896,7 @@
             gap: 10px;
             padding: 14px 40px;
             background: var(--blue);
-            color: var(--white);
+            color: var(--pure-white);
             border: none;
             border-radius: 50px;
             font-size: 16px;
@@ -970,7 +972,7 @@
     <div class="slide-counter">
         <span class="current" id="currentNum">01</span>
         <span>/ </span>
-        <span id="totalNum">06</span>
+        <span id="totalNum">13</span>
     </div>
 
     <!-- نقاط التنقل -->
@@ -1014,7 +1016,7 @@
                     ولم تعرف أين تجده؟
                 </div>
                 <div class="problem-sub reveal" style="transition-delay:0.2s">
-                    كم من الوقت ستخسر في البحث عنه؟
+                    كم من الوقت ستستغرق في البحث عنه؟
                 </div>
                 <div class="problem-stats reveal" style="transition-delay:0.35s">
                     <div class="stat-item">
@@ -1068,19 +1070,48 @@
                     <div class="feature-card reveal" style="transition-delay:0.55s">
                         <div class="feature-icon"><i class="fas fa-truck"></i></div>
                         <div class="feature-title">خدمة توصيل</div>
-                        <div class="feature-text">إمكانية التكامل مع خدمات التوصيل لتوصيل الدواء إلى باب منزلك</div>
+                        <div class="feature-text">إمكانية الاستفادة من خدمة التوصيل.</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- الشريحة 4: الأهداف -->
+        <!-- الشريحة 4: الفئة المستهدفة -->
         <div class="slide" data-index="3">
+            <div class="slide-bg-pattern"></div>
+            <div class="slide-inner" style="text-align: center;">
+                <div class="section-label reveal">المستهدفون</div>
+                <div class="section-heading reveal" style="transition-delay:0.1s; margin-bottom: 20px;">
+                    الفئة المستهدفة <span class="blue">الأساسية</span>
+                </div>
+                <div class="solution-desc reveal" style="transition-delay:0.2s; margin: 0 auto 50px auto;">
+                    بتطبيق تحليل STP على المجتمع لتحديدها.
+                </div>
+                <div class="solution-features" style="justify-content: center; max-width: 800px; margin: 0 auto;">
+                    <div class="feature-card reveal" style="transition-delay:0.3s">
+                        <div class="feature-icon"><i class="fas fa-running"></i></div>
+                        <div class="feature-title">الباحثون عن السرعة</div>
+                        <div class="feature-text">الأشخاص الذين يحتاجون إلى الوصول السريع إلى الأدوية في الحالات العاجلة.</div>
+                    </div>
+                    <div class="feature-card reveal" style="transition-delay:0.4s">
+                        <div class="feature-icon"><i class="fas fa-briefcase-medical"></i></div>
+                        <div class="feature-title">الأمراض النادرة</div>
+                        <div class="feature-text">أصحاب الأمراض النادرة الذين يواجهون صعوبة مستمرة في إيجاد أدويتهم.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- الشريحة 5: الأهداف -->
+        <div class="slide" data-index="4">
             <div class="slide-bg-pattern"></div>
             <div class="slide-inner">
                 <div class="section-label reveal">الرؤية</div>
                 <div class="section-heading reveal" style="transition-delay:0.1s">
                     أهداف <span class="blue">المشروع</span>
+                </div>
+                <div class="solution-desc reveal" style="transition-delay:0.2s; margin-bottom: 20px; font-size: 15px;">
+                    مقاسة بنموذج SMART
                 </div>
                 <div class="objectives-grid" style="margin-top: 30px;">
                     <div class="objective-item" data-delay="0">
@@ -1121,8 +1152,8 @@
             </div>
         </div>
 
-        <!-- الشريحة 5: نقاط القوة والضعف -->
-        <div class="slide" data-index="4">
+        <!-- الشريحة 6: نقاط القوة والضعف -->
+        <div class="slide" data-index="5">
             <div class="slide-bg-pattern"></div>
             <div class="slide-inner">
                 <div class="section-label reveal">التحليل</div>
@@ -1137,13 +1168,13 @@
                         </div>
                         <ul class="swot-list">
                             <li data-delay="0"><span class="li-icon"><i class="fas fa-check"></i></span>يعالج مشكلة
-                                واضحة وواقعية يواجهها المرضى يومياً</li>
-                            <li data-delay="1"><span class="li-icon"><i class="fas fa-check"></i></span>يتيح البحث
-                                بالاسم والصورة لتسهيل الوصول للدواء</li>
-                            <li data-delay="2"><span class="li-icon"><i class="fas fa-check"></i></span>يمكن دمج الموقع
-                                مع خدمة التوصيل لقيمة مضافة</li>
-                            <li data-delay="3"><span class="li-icon"><i class="fas fa-check"></i></span>قابل للتوسع
-                                مستقبلاً إلى مدن ومناطق جديدة</li>
+                                واضحة وواقعية.</li>
+                            <li data-delay="1"><span class="li-icon"><i class="fas fa-check"></i></span>يجمع معلومات
+                                الأدوية والصيدليات في مكان واحد.</li>
+                            <li data-delay="2"><span class="li-icon"><i class="fas fa-check"></i></span>يتيح البحث بالاسم أو الصورة.</li>
+                            <li data-delay="3"><span class="li-icon"><i class="fas fa-check"></i></span>يبدأ بنطاق محدود قابل للإدارة.</li>
+                            <li data-delay="4"><span class="li-icon"><i class="fas fa-check"></i></span>يمكن دمج الموقع وخدمة التوصيل.</li>
+                            <li data-delay="5"><span class="li-icon"><i class="fas fa-check"></i></span>قابل للتوسع مستقبلاً.</li>
                         </ul>
                     </div>
                     <div class="swot-col swot-weaknesses">
@@ -1152,25 +1183,19 @@
                             <div class="swot-header-text">نقاط الضعف</div>
                         </div>
                         <ul class="swot-list">
-                            <li data-delay="0"><span class="li-icon"><i class="fas fa-times"></i></span>الاعتماد على
-                                تحديث بيانات توفر الأدوية بشكل مستمر</li>
-                            <li data-delay="1"><span class="li-icon"><i class="fas fa-times"></i></span>الحاجة إلى تعاون
-                                الصيدليات وإشراكها في المنصة</li>
-                            <li data-delay="2"><span class="li-icon"><i class="fas fa-times"></i></span>محدودية التغطية
-                                الجغرافية في المرحلة الأولى</li>
-                            <li data-delay="3"><span class="li-icon"><i class="fas fa-times"></i></span>الحاجة إلى بناء
-                                ثقة المستخدم في دقة المعلومات</li>
-                            <li data-delay="4"><span class="li-icon"><i class="fas fa-times"></i></span>الحاجة إلى موارد
-                                مالية وتشغيلية مستمرة</li>
-                            <li data-delay="5"><span class="li-icon"><i class="fas fa-times"></i></span>الحاجة إلى تطوير
-                                تقني مخصص للمنصة</li>
+                            <li data-delay="0"><span class="li-icon"><i class="fas fa-times"></i></span>الاعتماد على تحديث بيانات توفر الأدوية.</li>
+                            <li data-delay="1"><span class="li-icon"><i class="fas fa-times"></i></span>الحاجة إلى تطوير تقني متخصص.</li>
+                            <li data-delay="2"><span class="li-icon"><i class="fas fa-times"></i></span>الحاجة إلى تعاون الصيدليات.</li>
+                            <li data-delay="3"><span class="li-icon"><i class="fas fa-times"></i></span>محدودية التغطية في المرحلة الأولى.</li>
+                            <li data-delay="4"><span class="li-icon"><i class="fas fa-times"></i></span>الحاجة إلى بناء ثقة المستخدم في دقة المعلومات.</li>
+                            <li data-delay="5"><span class="li-icon"><i class="fas fa-times"></i></span>الحاجة إلى موارد مالية وتشغيلية مستمرة.</li>
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- الشريحة 6: الفرص والتهديدات -->
-        <div class="slide" data-index="5">
+        <!-- الشريحة 7: الفرص والتهديدات -->
+        <div class="slide" data-index="6">
             <div class="slide-bg-pattern"></div>
             <div class="slide-inner">
                 <div class="section-label reveal">التحليل</div>
@@ -1204,8 +1229,8 @@
             </div>
         </div>
 
-        <!-- الشريحة 7: النشاط التسويقي -->
-        <div class="slide" data-index="6">
+        <!-- الشريحة 8: النشاط التسويقي -->
+        <div class="slide" data-index="7">
             <div class="slide-bg-pattern"></div>
             <div class="slide-inner">
                 <div class="section-label reveal">خطة العمل</div>
@@ -1266,8 +1291,8 @@
             </div>
         </div>
 
-        <!-- الشريحة 8: إحصائيات القبول -->
-        <div class="slide" data-index="7">
+        <!-- الشريحة 9: إحصائيات القبول -->
+        <div class="slide" data-index="8">
             <div class="slide-bg-pattern"></div>
             <div class="slide-inner" style="text-align: center;">
                 <div class="section-label reveal">إحصائيات</div>
@@ -1306,8 +1331,41 @@
             </div>
         </div>
 
-        <!-- الشريحة 9: النموذج المبدئي (1) -->
-        <div class="slide" data-index="8">
+        <!-- الشريحة 10: الميزانية المالية -->
+        <div class="slide" data-index="9">
+            <div class="slide-bg-pattern"></div>
+            <div class="slide-inner" style="text-align: center;">
+                <div class="section-label reveal">المالية</div>
+                <div class="section-heading reveal" style="transition-delay:0.1s; margin-bottom: 40px;">
+                    الميزانية <span class="blue">المالية</span>
+                </div>
+                
+                <div class="solution-desc reveal" style="transition-delay:0.2s; margin: 0 auto 40px auto; font-size: 20px; color: var(--white); background: rgba(38,198,218,0.1); padding: 16px 30px; border-radius: 50px; display: inline-block; border: 1px solid rgba(38,198,218,0.3);">
+                    تم تخصيص ميزانية إجمالية قدرها <span style="font-weight: 900; color: var(--blue);">50,000 د.ل</span>
+                </div>
+
+                <div class="solution-features" style="justify-content: center; max-width: 900px; margin: 0 auto;">
+                    <div class="feature-card reveal" style="transition-delay:0.3s; text-align: right;">
+                        <div class="feature-icon" style="font-size: 32px;"><i class="fas fa-laptop-code"></i></div>
+                        <div class="feature-title" style="font-size: 20px; margin-bottom: 12px; color: var(--blue);">25,000 - 35,000 د.ل</div>
+                        <div class="feature-text" style="font-size: 15px;">لإنشاء وتطوير تطبيق ترياق وبناء البنية التحتية التقنية للمشروع.</div>
+                    </div>
+                    <div class="feature-card reveal" style="transition-delay:0.4s; text-align: right;">
+                        <div class="feature-icon" style="font-size: 32px;"><i class="fas fa-bullhorn"></i></div>
+                        <div class="feature-title" style="font-size: 20px; margin-bottom: 12px; color: var(--blue);">10,000 د.ل</div>
+                        <div class="feature-text" style="font-size: 15px;">مخصصة للتسويق وإطلاق الحملات الإعلانية والتكاليف التشغيلية العامة.</div>
+                    </div>
+                    <div class="feature-card reveal" style="transition-delay:0.5s; text-align: right;">
+                        <div class="feature-icon" style="font-size: 32px;"><i class="fas fa-piggy-bank"></i></div>
+                        <div class="feature-title" style="font-size: 20px; margin-bottom: 12px; color: var(--blue);">5,000 د.ل</div>
+                        <div class="feature-text" style="font-size: 15px;">كميزانية احتياطية لمواجهة أي مصاريف غير متوقعة أو طوارئ.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- الشريحة 11: النموذج المبدئي (1) -->
+        <div class="slide" data-index="10">
             <div class="slide-bg-pattern"></div>
             <div class="slide-inner" style="text-align: center; height: 90vh; display: flex; flex-direction: column; justify-content: flex-start; padding-top: 5vh;">
                 <div class="section-label reveal">واجهة المستخدم</div>
@@ -1320,8 +1378,8 @@
             </div>
         </div>
 
-        <!-- الشريحة 10: النموذج المبدئي (2) -->
-        <div class="slide" data-index="9">
+        <!-- الشريحة 12: النموذج المبدئي (2) -->
+        <div class="slide" data-index="11">
             <div class="slide-bg-pattern"></div>
             <div class="slide-inner" style="text-align: center; height: 90vh; display: flex; flex-direction: column; justify-content: flex-start; padding-top: 5vh;">
                 <div class="section-label reveal">واجهة المستخدم</div>
@@ -1334,8 +1392,8 @@
             </div>
         </div>
 
-        <!-- الشريحة 11: الختام -->
-        <div class="slide end-slide" data-index="10">
+        <!-- الشريحة 13: الختام -->
+        <div class="slide end-slide" data-index="12">
             <div class="slide-bg-pattern">
                 <div
                     style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:600px; height:600px; border-radius:50%; background:radial-gradient(circle, rgba(38, 198, 218,0.08), transparent 70%); animation: pulse-glow 4s ease-in-out infinite;">
@@ -1345,20 +1403,20 @@
                 style="text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; max-width: 900px; padding: 0 40px;">
                 <div class="end-logo reveal" style="font-size: clamp(40px, 5vw, 60px); margin-bottom: 30px; letter-spacing: 0;">الخاتمة</div>
                 
-                <div class="end-desc reveal" style="transition-delay:0.15s; font-size: 20px; line-height: 1.8; color: var(--white); margin-bottom: 24px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); max-width: 100%;">
-                    كل مشكلة نواجهها قد تكون بداية لفكرة تصنع فرقًا… ونحن اخترنا أن نبدأ من مشكلة حقيقية لنقدّم لها حلًا حقيقيًا.
+                <div class="end-desc reveal" style="transition-delay:0.15s; font-size: 22px; line-height: 1.8; color: var(--white); margin-bottom: 24px; text-shadow: 0 2px 10px rgba(0,0,0,0.1); max-width: 100%;">
+                    كل فكرة عظيمة تبدأ بمشكلة… ونحن اخترنا أن نبدأ <span class="blue" style="font-weight: 700;">بحل</span>.
                 </div>
                 
                 <div class="end-desc reveal" style="transition-delay:0.3s; font-size: 20px; line-height: 1.8; color: var(--gray-light); margin-bottom: 24px; max-width: 100%;">
-                    مع <span class="blue" style="font-weight: 700;">«ترياق»</span>، نطمح إلى أن نجعل الوصول إلى الدواء أسهل، أسرع وأكثر كفاءة، وأن نختصر على المريض الوقت والجهد في رحلة البحث عن علاجه.
+                    من هنا جاءت فكرتنا؛ لنحوّل البحث عن الدواء من معاناة تستنزف الوقت والجهد، إلى تجربة أسهل وأسرع وأكثر ذكاءً.
                 </div>
                 
                 <div class="end-desc reveal" style="transition-delay:0.45s; font-size: 20px; line-height: 1.8; color: var(--gray-light); margin-bottom: 24px; max-width: 100%;">
-                    <span class="blue" style="font-weight: 700;">«ترياق»</span> ليس مجرد تطبيق، بل خطوة نحو تجربة صحية أكثر سهولة وذكاءً.
+                    هدفنا ليس أن نصنع تطبيقًا فقط، بل أن نصنع <span class="blue" style="font-weight: 700;">أثرًا حقيقيًا</span> يلمسه كل شخص يبحث عن دوائه.
                 </div>
                 
                 <div class="end-tagline reveal" style="transition-delay:0.6s; font-size: 26px; font-weight: 700; color: var(--blue-light); margin-top: 20px;">
-                    مصراتة هي البداية… وطموحنا أن يصل أثر <span style="color: var(--white);">«ترياق»</span> إلى أبعد من ذلك.
+                    مصراتة هي البداية… <span style="color: var(--white);">والأثر أبعد من ذلك.</span>
                 </div>
                 
                 <button class="end-cta reveal" style="transition-delay:0.75s; margin-top: 40px;" onclick="goToSlide(0)">
